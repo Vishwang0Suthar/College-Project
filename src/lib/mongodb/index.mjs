@@ -1,35 +1,49 @@
 import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
+import express from "express"
+// const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 6000;
+const uri = "mongodb+srv://dripydacoder:NeigaHeiga@cluster0.kzpss9d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
-// const { MongoClient } = require('mongodb');
+// const uri = "mongodb+srv://jaydeep_khandla:jdmongo11@cluster0.vcbyovw.mongodb.net/Screen-diary?retryWrites=true&w=majority"
 
-// Connection URI
-const uri = 'mongodb://localhost:27017/your_database_name'; // Change this to your MongoDB URI
 
-// Create a new MongoClient
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Connect to the MongoDB server
-client.connect(err => {
-    if (err) {
-        console.error('Error connecting to MongoDB:', err);
-        return;
-    }
-    console.log('Connected to MongoDB');
+// console.log('bruh')
+export async function connectToDatabase() {
+    mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
 
-    const db = client.db(); // Database Name is already included in the connection URI
-
-    // Now you can use 'db' to interact with your MongoDB database
-
-    // For example, you can insert a document into a collection
-    const collection = db.collection('your_collection_name'); // Change this to your collection name
-    collection.insertOne({ key: 'value' }, (err, result) => {
-        if (err) {
-            console.error('Error inserting document:', err);
-            return;
-        }
-        console.log('Document inserted successfully:', result.insertedId);
+    mongoose.connection.once("open", () => {
+        console.log("Connected to MongoDb!");
+        app.listen(PORT, () => {
+            console.log("app is running on:", PORT);
+        });
+        // socketConnection(socket)
     });
+}
+connectToDatabase();
+export default connectToDatabase;
 
-    // Close the connection
-    // client.close();
-});
+// export async function connectToDatabase() {
+//     const client = new MongoClient(uri, {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//     });
+
+//     try {
+//         await client.connect();
+//         console.log('Connected to MongoDB');
+//         return client.db();
+//     } catch (error) {
+//         console.error('Error connecting to MongoDB', error);
+//         throw new Error('Could not connect to MongoDB');
+//     }
+// }
+
+// connectToDatabase();
+
+// export default connectToDatabase;
