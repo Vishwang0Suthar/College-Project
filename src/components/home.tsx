@@ -9,6 +9,7 @@ import { Spotlight } from "@/components/spotlight";
 import MovieDetails from "./singlemovie";
 import Link from "next/link";
 import HashLoader from "react-spinners/HashLoader";
+import Movieslides from "./movieslides";
 
 // import { connectToDatabase } from "@/lib/mongodb/index.mjs";
 
@@ -79,6 +80,7 @@ export default function Home() {
           />
         </div>
       </div>
+      {/* <Movieslides /> */}
       <div className="py-10 z-10 px-16 mt-20 flex gap-2">
         <input
           type="text"
@@ -97,19 +99,17 @@ export default function Home() {
           {data.Search &&
             data.Search.map((movie) => (
               <Link
+                key={movie.imdbID}
                 href={{
                   pathname: "/single-movie",
                   query: { data: movie.imdbID },
                 }}
               >
                 <>
-                  <div
-                    key={movie.imdbID}
-                    className="rounded-lg z-0 overflow-hidden bg-white"
-                  >
+                  <div className="rounded-lg z-0 overflow-hidden bg-white">
                     <div
                       className="p-2 rounded-t-lg overflow-hidden h-fit "
-                      onClick={() => handleClick(movie.imdbID)}
+                      // onClick={() => handleClick(movie.imdbID)}
                     >
                       {movie.Poster !== "N/A" ? (
                         <Image

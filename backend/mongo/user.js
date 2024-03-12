@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://omtrivedioo3:Coca7D6qaAtcbfuA@cluster0.3o9au8z.mongodb.net/NewsAppDatabase?retryWrites=true&w=majority", {
+const cors = require('cors')
+mongoose.connect("mongodb+srv://dripydacoder:NeigaHeiga@cluster0.kzpss9d.mongodb.net/screen-diary?retryWrites=true&w=majority", {
+    //mongodb+srv://omtrivedioo3:Coca7D6qaAtcbfuA@cluster0.3o9au8z.mongodb.net/NewsAppDatabase?retryWrites=true&w=majority    
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
