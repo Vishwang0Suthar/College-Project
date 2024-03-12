@@ -1,9 +1,54 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer components {
+  .px-container {
+    padding-left: max(0.75rem
+        /* 12px */
+        ,
+        calc((100vw - calc(1280px - 1rem
+              /* 16px */
+              * 2)) / 2));
+    padding-right: max(0.75rem
+        /* 12px */
+        ,
+        calc((100vw - calc(1280px - 1rem
+              /* 16px */
+              * 2)) / 2));
+  }
+}
+
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  header,
+  footer,
+  section {
+    @apply px-container;
+  }
+
+  section {
+    @apply py-10;
+  }
+
+  body {
+    @apply font-sans overflow-x-hidden text-black bg-[#FFFEF];
+
+  }
+}
 
 body {
   /* background-color: rgb(170, 181, 113); */
   background-color: rgb(18, 55, 42);
+
+  ::selection {
+    color: rgb(18, 55, 42);
+    background-color: antiquewhite;
+  }
+
   /* background: linear-gradient(180deg, rgba(25, 21, 42, 1) 0%, rgba(60, 59, 59, 1) 19%, rgba(150, 165, 70, 1) 47%, rgba(170, 181, 113, 1) 100%); */
 }

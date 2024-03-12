@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
         newuser.email = email;
         const hashPassword = await bcrypt.compare(password, user.password);
         if (hashPassword) {
-            res.send({ message: "Login Successfull", user: user,success:true });
+            res.send({ message: "Login Successfull", user: user, success: true });
         } else {
             success = false;
             res.send({
@@ -47,6 +47,7 @@ router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
     let success = false;
     try {
+        // console.log("bruh");
         let user = await User.findOne({ email: email });
         if (user) {
             success = false;
