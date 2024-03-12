@@ -143,7 +143,7 @@ export default function Home() {
           } items-center  h-[150px]  w-full`}
         >
           {/* <ClimbingBoxLoader className="scale-150" color={loaderColor} /> */}
-          <HashLoader className="scale-150" color="#531B42" />
+          <HashLoader className="scale-150" color="#FBFADA" />
         </div>
       )}
     </>
