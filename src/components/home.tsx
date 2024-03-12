@@ -81,10 +81,10 @@ export default function Home() {
         </div>
       </div>
       {/* <Movieslides /> */}
-      <div className="py-10 z-10 px-16 mt-20 flex gap-2">
+      <div className="py-10 z-10 px-16 mt-20 flex gap-2 w-full justify-center">
         <input
           type="text"
-          className="p-2 rounded-sm focus:ring-green-700 focus:outline-none ring-2"
+          className="p-2 rounded-sm focus:ring-green-700 focus:outline-none ring-2 w-[50dvw]"
           placeholder="enter a movie name"
           value={movieName} // Bind the input value to the movieName state
           onChange={handleInputChange}
