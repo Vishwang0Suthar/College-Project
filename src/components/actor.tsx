@@ -35,7 +35,7 @@ const ActorPhoto = ({ actorName }) => {
       {photoUrl ? (
         <img src={photoUrl} alt={`${actorName} professional photo`} />
       ) : (
-        <p>No professional photo found for {actorName}</p>
+        <p>Actors: {actorName}</p>
       )}
     </div>
   );

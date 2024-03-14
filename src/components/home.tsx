@@ -64,7 +64,9 @@ export default function Home() {
   return (
     <>
       <div>
-        <Spotlight />
+        <div className="">
+          <Spotlight className="absolute left-1/4 -top-1/3" />
+        </div>
         <p className="text-9xl pt-20 text-[#FBFADA] text-center font-mono font-semibold">
           SCREEN DIARY
         </p>
@@ -120,7 +122,7 @@ export default function Home() {
                         />
                       ) : (
                         <Image
-                          src="/placeholder.jpg" // Replace "/placeholder.jpg" with the URL of your placeholder image
+                          src="/Images/bgg.jpg" // Replace "/placeholder.jpg" with the URL of your placeholder image
                           alt={movie.Title}
                           width={600}
                           height={900}
