@@ -76,36 +76,42 @@ const Single = () => {
               </p> */}
               </div>
             </div>
-            <div className="font-serif flex flex-col gap-14 text-white">
-              <div className=" flex flex-col gap-4  max-w-fit">
-                <h1 className=" font-extrabold text-6xl py-4 ">
-                  {data.Title}{" "}
-                  <span className="font-normal">- ({data.Year})</span>
+            <div className="font-serif flex flex-col gap-8 text-white">
+              <div className="flex flex-col gap-8 max-w-fit">
+                <h1 className="font-extrabold text-5xl py-4">
+                  {data.Title}
+                  <span className="font-normal text-3xl"> ({data.Year})</span>
                 </h1>
-                <div className="font-extralight">
-                  <p>
-                    <u>Director</u> : {data.Director}
+                <div className="">
+                  <p className="text-lg">
+                    <u className="text-xl">Director</u>
+                    :<br /> {data.Director}
                   </p>
-                  <p>
-                    <u>Writer</u> : {data.Writer}
+                  <br />
+                  <p className="text-lg">
+                    <u className="text-xl">Writer</u> :
+                    <br />
+                    {data.Writer}
                   </p>
                 </div>
-                <p className="text-xl font-extralight line-clamp-5">
-                  {data.Plot}
+                <p className="text-lg">
+                  <u className="text-xl">Plot</u> : <br /> {data.Plot}
                 </p>
               </div>
-              <div className="grid  grid-cols-3">
-                {data.Ratings.map((rating) => (
-                  <div key={rating.Source}>
-                    <p className="text-xl font-extrabold">{rating.Source}</p>
-                    <p>{rating.Value}</p>
-                  </div>
-                ))}
+              <div className="text-lg">
+                <u className="text-xl">Actors</u> : <br /> {data.Actors}
               </div>
-              <div className="grid  grid-cols-3">
-                <ActorPhoto actorName={data.Actors} />
+              <div>
+                <u className="text-xl">Ratings</u> : <br />
+                <div className="grid  grid-cols-3">
+                  {data.Ratings.map((rating) => (
+                    <div key={rating.Source}>
+                      <p className="text-lg">{rating.Source}</p>
+                      <p>{rating.Value}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="text-xl">Actors: {data.Actors}</div>
             </div>
           </div>
         )}
