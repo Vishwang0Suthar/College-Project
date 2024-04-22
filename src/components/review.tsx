@@ -52,7 +52,60 @@ const Review = () => {
     }
   };
 
+import { useRouter } from "next/navigation";
+
+const Review = () => {
+  const router = useRouter();
+  const user = localStorage.getItem("username");
+  const [rating, setRating] = useState(0);
+
+  // Function to handle rating change
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+  };
+
+  const [reviewData, setReviewData] = useState({
+    user: user,
+    text: "",
+    rating: 0,
+    spoiler: false,
+  });
+
+  const handleChange = (event: FormEvent) => {
+    const { name, value, checked, type } = event.target;
+
+    // Handle checkbox differently
+    if (type === "checkbox") {
+      setReviewData({
+        ...reviewData,
+        [name]: checked,
+      });
+    } else {
+      setReviewData({
+        ...reviewData,
+        [name]: value,
+      });
+    }
+  };
+
+  const review = async (event: FormEvent) => {
+    event.preventDefault();
+    console.log(reviewData);
+    const res = await fetch("http://localhost:5000/review", {
+      method: "POST",
+      body: JSON.stringify(reviewData),
+      headers: { "Content-Type": "application/json" },
+    });
+    const data1 = await res.json();
+    alert(data1.message);
+    if (data1.success) {
+      alert("Review submitted successfully");
+    }
+  };
+
   return (
+    <div className="p-4 flex flex-col">
+      <form onSubmit={review}>
     <div className="p-4 flex flex-col">
       <form onSubmit={review}>
         <h2 className="text-4xl font-serif text-white">User Reviews</h2>
@@ -60,13 +113,19 @@ const Review = () => {
           <div className="flex-1 min-h-5">
             <textarea
               name="text"
-              className="w-full focus:outline-none shadow-xl p-2"
+              name="text"
+              className="w-full focus:outline-none shadow-xl p-2 rounded-md"
               placeholder="Write your own Review"
               value={reviewData.text}
               onChange={handleChange}
             ></textarea>
           </div>
           <div className="flex-1 flex flex-col w-full ">
+            <Stars
+              name="rating"
+              rating={rating}
+              onRatingChange={handleRatingChange}
+            />{" "}
             <Stars
               name="rating"
               rating={rating}
@@ -96,3 +155,4 @@ const Review = () => {
 };
 
 export default Review;
+  

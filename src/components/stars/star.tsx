@@ -12,7 +12,7 @@ export default function Stars({ rating, onRatingChange }) {
         value={rating} // Use the rating prop passed from the parent
         onChange={onRatingChange} // Call parent's callback for rating change
       />
-      <div className=" bg-black rounded-md text-white hover:bg-white duration-500 min-w-24 hover:text-black select-none p-3 px-6 h-10 flex items-center -mb-10px ">
+      <div className=" bg-black rounded-md text-white hover:bg-white duration-300 min-w-24 hover:text-black select-none p-3 px-6 h-10 flex items-center -mb-10px ">
         <p className="rating text-xl text-center duration-200 w-full">
           {rating === 0 ? "Rate" : rating}
         </p>
