@@ -87,16 +87,16 @@ export default function Home() {
         <input
           type="text"
           className="relative p-2 w-96 rounded-sm focus:ring-green-700 focus:outline-none ring-2"
-          placeholder="enter a movie name"
+          placeholder="Enter a movie name"
           value={movieName} // Bind the input value to the movieName state
           onChange={handleInputChange}
         />
         <svg
           viewBox="0 0 24 24"
           fill="currentColor"
-          height="1em"
-          width="1em"
-          className="absolute flex left-[60%] opacity-35"
+          height="1.2em"
+          width="1.2em"
+          className="absolute flex left-[62%] top-[43%] opacity-35"
         >
           <path d="M11 20H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h1l2 4h3L8 4h2l2 4h3l-2-4h2l2 4h3l-2-4h4v9c-.5-.8-1.2-1.5-2-2v-1H5.8L4 6.5V18h6.2c.2.7.4 1.4.8 2m9.3-1.1c.4-.7.7-1.5.7-2.4 0-2.5-2-4.5-4.5-4.5S12 14 12 16.5s2 4.5 4.5 4.5c.9 0 1.7-.2 2.4-.7l3.1 3.1 1.4-1.4-3.1-3.1m-3.8.1c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z" />
         </svg>
@@ -159,24 +159,7 @@ export default function Home() {
           <HashLoader className="scale-150" color="#FBFADA" />
         </div>
       )}
-      <div className="py-12 items-center w-full flex flex-col gap-4 px-10">
-        <h1 className="text-3xl font-semibold text-[antiquewhite]">About</h1>
-        <p className="text-white">
-          ScreenDiary is a web-portal designed for cinephiles,
-          offering an immersive platform to track their viewing history,
-          discover new films, and connect with other movie enthusiasts. It
-          enables users to create personalized profiles, curate and maintain a
-          comprehensive record of their viewing history, and foster a sense of
-          community through discussion forums, challenges, and sharing thoughts.
-          ScreenDiary employs advanced recommendation algorithms to enhance the
-          movie discovery process, generating tailored film suggestions and a
-          curated list of popular genres and critically acclaimed masterpieces.
-          The user-friendly interface and intuitive design ensure a seamless
-          experience for cinephiles of all levels. ScreenDiary supports
-          cross-platform compatibility and offline functionality, making it the
-          go-to website for passionate film lovers.
-        </p>
-      </div>
+      
     </>
   );
 }

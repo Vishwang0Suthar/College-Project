@@ -3,6 +3,7 @@ import ActorPhoto from "@/components/actor";
 import { SparklesCore } from "@/components/paricles";
 import Review from "@/components/review";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -37,6 +38,9 @@ const Single = () => {
   return (
     <section>
       {/* {receivedData} */}
+      <p className="text-6xl pb-5 text-[antiquewhite] text-center">
+        <Link href="/">SCREEN DIARY</Link>
+      </p>
       <div className="bg-black gap-10 flex flex-col bg-opacity-30 relative rounded-t-xl p-5">
         <div className="w-full z-[-1] absolute inset-0 h-100%">
           <SparklesCore
