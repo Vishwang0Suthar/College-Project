@@ -1,6 +1,7 @@
 "use client";
 import ActorPhoto from "@/components/actor";
 import { SparklesCore } from "@/components/paricles";
+import Review from "@/components/review";
 import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -35,19 +36,19 @@ const Single = () => {
 
   return (
     <section>
-      <div className="w-full z-[-1] absolute inset-0 h-full">
-        <SparklesCore
-          id="tsparticlesfullpage"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.4}
-          particleDensity={100}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
-        />
-      </div>
       {/* {receivedData} */}
-      <div className="bg-black bg-opacity-30 rounded-t-xl p-5">
+      <div className="bg-black gap-10 flex flex-col bg-opacity-30 relative rounded-t-xl p-5">
+        <div className="w-full z-[-1] absolute inset-0 h-100%">
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={100}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+          />
+        </div>
         {data && (
           <div className="flex md:flex-row flex-col gap-10 ">
             <div className="p-5 min-w-fit group  ">
@@ -108,6 +109,7 @@ const Single = () => {
             </div>
           </div>
         )}
+        <Review></Review>
       </div>
     </section>
   );

@@ -17,6 +17,9 @@ module.exports = {
             beige: {
                 100: "#FBFADA"
             },
+            greenDark:{
+                50: "#12372a"
+            }
             
           },
       animation: {
