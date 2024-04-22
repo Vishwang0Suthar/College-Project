@@ -1,29 +1,50 @@
 const mongoose = require("mongoose");
-const cors = require('cors')
+const cors = require('cors');
+
 mongoose.connect("mongodb+srv://dripydacoder:NeigaHeiga@cluster0.kzpss9d.mongodb.net/screen-diary?retryWrites=true&w=majority", {
-    //mongodb+srv://omtrivedioo3:Coca7D6qaAtcbfuA@cluster0.3o9au8z.mongodb.net/NewsAppDatabase?retryWrites=true&w=majority    
     useNewUrlParser: true,
     useUnifiedTopology: true,
+}).then(() => {
+    console.log("MongoDB connected");
+}).catch(err => {
+    console.error("MongoDB connection error:", err);
 });
-// console.log(process.env.DATABASE_PASS);
 
-var db = mongoose.connection;
-try {
-    db.on("error", console.error.bind(console, "Connecton error"));
-    db.once("open", function () {
-        console.log("mongoDB connected");
-    });
-} catch (err) {
-    console.log(err);
-}
-
+// Define the User schema
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: {
         type: String,
-        minLength: 8,
+        minlength: 8, // Changed to minlength instead of minLength
         required: [true, "User password required"],
     },
 });
-exports.User = new mongoose.model("User", userSchema);
+
+// Create the User model
+const User = mongoose.model("User", userSchema);
+
+// Define the Review schema
+const reviewSchema = new mongoose.Schema({
+    user: {
+        type: String,
+        required: true
+    },
+    text: {
+        type: String,
+        required: true
+    },
+    rating: {
+        type: Number,
+        required: true
+    },
+    spoiler: {
+        type: Boolean,
+        default: false
+    }
+});
+
+// Create the Review model
+const Review = mongoose.model("Review", reviewSchema);
+
+module.exports = { User, Review }; // Export both models

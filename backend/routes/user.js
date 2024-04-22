@@ -1,82 +1,72 @@
-const model = require("../mongo/user");
-const User = model.User;
 const express = require("express");
-const Router = require("router");
-const { mongo } = require("mongoose");
-const router = Router();
-
 const bcrypt = require("bcrypt");
+const { User } = require("../mongo/user"); // Import User model
+const router = express.Router(); // Use express.Router()
+const mongo = require("mongoose");
 
+// Middleware to parse JSON bodies
+router.use(express.json());
 
-
-let newuser = {}
-let user;
 // User login request
-router.post("/login", async (req, res) => {
-    let success = false;
+router.post("/", async (req, res) => {
     const { email, password } = req.body;
-    user = await User.findOne({ email: email });
-    console.log(user)
-    // console.log(email)
-    // console.log(password)
 
-    // if (!email || !password) {
-    //     success = false;
-    //     res.send({ message: "Please enter valid data" });
-    // } else {
-    if (user) {
-        newuser.email = email;
-        const hashPassword = await bcrypt.compare(password, user.password);
-        if (hashPassword) {
-            res.send({ message: "Login Successfull", user: user, success: true });
+    try {
+        const user = await User.findOne({ email });
+        if (user) {
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                return res.json({ success: true, message: "Login Successful", user });
+            } else {
+                return res.status(401).json({ success: false, message: "Incorrect Password" });
+            }
         } else {
-            success = false;
-            res.send({
-                message: "Password didn't match",
-            });
-            // res.sendStatus(401);
+            return res.status(404).json({ success: false, message: "User not found" });
         }
-    } else {
-        success = false;
-        res.send({ message: "User not registered" });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-    // }
 });
+
+
 // User register request
 router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
-    let success = false;
+
     try {
-        // console.log("bruh");
-        let user = await User.findOne({ email: email });
+        let user = await User.findOne({ email });
         if (user) {
-            success = false;
-            res.send({
-                message: "User already registerd",
-                user: user,
-                success: success,
-            });
+            return res.status(400).json({ message: "User already registered" });
         } else {
-            const user = new User({
-                name,
-                email,
-                password,
-            });
-            const hashPassword = await bcrypt.hash(password, 10);
-            user.password = hashPassword;
-            const doc = await user.save();
-            console.log(doc);
-            success = true;
-            res.json({
-                message: "User registered Successfull, Please Login now...",
-                success: success,
-            });
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user = new User({ name, email, password: hashedPassword });
+            await user.save();
+            return res.json({ message: "User registered successfully" });
         }
     } catch (err) {
-        success = false;
-        res.send(err);
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
+// Review submission request
+router.post("/review", async (req, res) => {
+    const { user, text, rating, spoiler } = req.body;
+
+    if (!user || !text || rating === undefined || spoiler === undefined) {
+        return res.status(400).json({ message: "Please provide all required fields" });
+    }
+
+    try {
+        const Review = mongo.connection.collection("Review"); // Assuming MongoDB connection
+        const review = { user, text, rating, spoiler };
+        await Review.insertOne(review);
+        return res.json({ message: "Review saved successfully", review });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Failed to save review" });
+    }
+});
 
 exports.router = router;
