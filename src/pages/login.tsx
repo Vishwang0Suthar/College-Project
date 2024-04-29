@@ -41,7 +41,7 @@ const Login = ({ setLoginUser }) => {
       console.log("logged in");
 
       router.push("/", { state: { name: data1.user.name } });
-      localStorage.setItem("username", data1.user.name);
+      localStorage.setItem("username", data1.user.email);
       // console.log(localStorage.getItem("username"));
       handleLogin();
     }
@@ -52,7 +52,7 @@ const Login = ({ setLoginUser }) => {
     await Authlogin();
   };
   return (
-    <div className="vh-100">
+    <div className="vh-100 z-30">
       <div className="container-fluid h-custom">
         {/* <div className="w-full z-[-1] absolute inset-0 h-full">
           <SparklesCore
@@ -65,7 +65,7 @@ const Login = ({ setLoginUser }) => {
             particleColor="#FFFFFF"
           />
         </div> */}
-        <div className="row d-flex justify-content-center align-items-center h-100">
+        <div className="row d-flex justify-content-center -mt-20 align-items-center h-100">
           <div className="">
             <img
               src="/Images/bgg.jpg"
@@ -133,7 +133,7 @@ const Login = ({ setLoginUser }) => {
                   style={{ padding: "0rem 2rem" }}
                   // type="submit"
                   onClick={login}
-                  className="btn btn-primary btn-lg bg-red-800 rounded-2xl text-white"
+                  className="btn btn-primary btn-lg bg-greenDark-50 rounded-2xl text-white"
                 >
                   Login
                 </button>

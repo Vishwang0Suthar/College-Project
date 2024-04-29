@@ -26,7 +26,15 @@ const User = mongoose.model("User", userSchema);
 
 // Define the Review schema
 const reviewSchema = new mongoose.Schema({
+    movie: {
+        type: String,
+        required: true
+    },
     user: {
+        type: String,
+        required: true
+    },
+    movieAPI: {
         type: String,
         required: true
     },

@@ -70,7 +70,7 @@ export default function Home() {
         <p className="text-9xl pt-20 text-[#FBFADA] text-center font-mono font-semibold">
           <Link href="/">SCREEN DIARY</Link>
         </p>
-        <div className="w-full z-[-1] absolute inset-0 h-full">
+        <div className="w-full z-[-2] absolute inset-0 h-full">
           <SparklesCore
             id="tsparticlesfullpage"
             background="transparent"
@@ -83,7 +83,7 @@ export default function Home() {
         </div>
       </div>
       {/* <Movieslides /> */}
-      <div className="py-10 z-10 px-16 mt-20 flex gap-2 justify-center relative">
+      <div className="py-10 z-0 px-16 mt-20 flex w-[30%] mx-auto gap-2 justify-center relative">
         <input
           type="text"
           className="relative p-2 w-96 rounded-sm focus:ring-green-700 focus:outline-none ring-2"
@@ -96,7 +96,7 @@ export default function Home() {
           fill="currentColor"
           height="1.2em"
           width="1.2em"
-          className="absolute flex left-[62%] top-[43%] opacity-35"
+          className="absolute flex right-20 top-12 opacity-35"
         >
           <path d="M11 20H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h1l2 4h3L8 4h2l2 4h3l-2-4h2l2 4h3l-2-4h4v9c-.5-.8-1.2-1.5-2-2v-1H5.8L4 6.5V18h6.2c.2.7.4 1.4.8 2m9.3-1.1c.4-.7.7-1.5.7-2.4 0-2.5-2-4.5-4.5-4.5S12 14 12 16.5s2 4.5 4.5 4.5c.9 0 1.7-.2 2.4-.7l3.1 3.1 1.4-1.4-3.1-3.1m-3.8.1c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z" />
         </svg>
@@ -159,7 +159,6 @@ export default function Home() {
           <HashLoader className="scale-150" color="#FBFADA" />
         </div>
       )}
-      
     </>
   );
 }
