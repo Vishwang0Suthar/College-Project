@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+// import swal from "sweetalert";
 const Single = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();

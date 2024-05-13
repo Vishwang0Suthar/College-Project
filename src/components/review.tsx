@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import Stars from "./stars/star";
-import { useRouter } from "next/navigation";
+import swal from "sweetalert";
 
 type Props = {
   movie?: string;
@@ -8,7 +8,6 @@ type Props = {
 };
 
 const Review = ({ movie, receivedData, ...props }: Props) => {
-  const router = useRouter();
   const user = localStorage.getItem("username");
 
   // State for review data
@@ -17,7 +16,7 @@ const Review = ({ movie, receivedData, ...props }: Props) => {
     movie: movie,
     movieAPI: receivedData,
     text: "",
-    rating: 0, // Set the default rating to 0
+    rating: 0,
     spoiler: false,
   });
 
@@ -25,7 +24,7 @@ const Review = ({ movie, receivedData, ...props }: Props) => {
   const handleRatingChange = (newRating) => {
     setReviewData({
       ...reviewData,
-      rating: newRating, // Update the rating in reviewData
+      rating: newRating,
     });
   };
 
@@ -33,7 +32,6 @@ const Review = ({ movie, receivedData, ...props }: Props) => {
   const handleChange = (event: FormEvent) => {
     const { name, value, checked, type } = event.target;
 
-    // Handle checkbox differently
     if (type === "checkbox") {
       setReviewData({
         ...reviewData,
@@ -50,7 +48,6 @@ const Review = ({ movie, receivedData, ...props }: Props) => {
   // Function to submit review
   const review = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(reviewData);
 
     try {
       const res = await fetch("http://localhost:5000/review", {
@@ -59,12 +56,21 @@ const Review = ({ movie, receivedData, ...props }: Props) => {
         headers: { "Content-Type": "application/json" },
       });
       const data1 = await res.json();
-      alert(data1.message);
+
       if (data1.success) {
-        alert("Review submitted successfully");
+        swal("Great!", "Review saved successfully!", "success");
+      } else if (data1.alreadyReviewed) {
+        swal("Oops!", "You already posted a review for this movie.", "info");
+      } else {
+        swal(
+          "Oops!",
+          "Failed to save review. Please try again later.",
+          "error"
+        );
       }
     } catch (error) {
       console.error("Error submitting review:", error);
+      swal("Oops!", "Something went wrong. Please try again later.", "error");
     }
   };
 
@@ -85,7 +91,7 @@ const Review = ({ movie, receivedData, ...props }: Props) => {
           </div>
           <div className="flex-1 flex flex-col gap-2 w-full ">
             <Stars
-              rating={reviewData.rating} // Pass the rating from reviewData
+              rating={reviewData.rating}
               onRatingChange={handleRatingChange}
             />
             <div className="flex items-center gap-2">

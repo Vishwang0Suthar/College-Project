@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Register = () => {
   const router = useRouter();
+  const userRef = useRef();
+  const errRef = useRef();
+
   const [user, setUser] = useState({
     name: "",
     email: "",

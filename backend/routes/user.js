@@ -3,29 +3,32 @@ const bcrypt = require("bcrypt");
 const { User } = require("../mongo/user"); // Import User model
 const router = express.Router(); // Use express.Router()
 const mongo = require("mongoose");
-
+const swal = require("sweetalert");
 // Middleware to parse JSON bodies
 router.use(express.json());
 
 // User login request
 router.post("/", async (req, res) => {
     const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if (user) {
-            const match = await bcrypt.compare(password, user.password);
-            if (match) {
-                return res.json({ success: true, message: "Login Successful", user });
+    if (email == "")
+        return res.status(500).json({ success: false, message: "Invalid input for user name" });
+    else {
+        try {
+            const user = await User.findOne({ email });
+            if (user) {
+                const match = await bcrypt.compare(password, user.password);
+                if (match) {
+                    return res.json({ success: true, message: "Login Successful", user });
+                } else {
+                    return res.status(401).json({ success: false, message: "Incorrect Password" });
+                }
             } else {
-                return res.status(401).json({ success: false, message: "Incorrect Password" });
+                return res.status(404).json({ success: false, message: "User not found" });
             }
-        } else {
-            return res.status(404).json({ success: false, message: "User not found" });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
         }
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
 
@@ -51,23 +54,33 @@ router.post("/register", async (req, res) => {
 });
 
 // Review submission request
+// Review submission request
 router.post("/review", async (req, res) => {
     const { movie, user, movieAPI, text, rating, spoiler } = req.body;
 
     if (!user || !text || rating === undefined) {
-        return res.status(400).json({ message: "Please provide all required fields" });
+        return res.status(400).json({ success: false, message: "Please provide all required fields" });
     }
 
     try {
         const Review = mongo.connection.collection("Review"); // Assuming MongoDB connection
+
+        // Check if the user already posted a review
+        const existingReview = await Review.findOne({ movie, user });
+        if (existingReview) {
+            return res.status(400).json({ success: false, alreadyReviewed: true });
+        }
+
         const review = { movie, user, movieAPI, text, rating, spoiler };
         await Review.insertOne(review);
-        return res.json({ message: "Review saved successfully", review });
+        return res.json({ success: true, message: "Review saved successfully", review });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Failed to save review" });
+        return res.status(500).json({ success: false, message: "Failed to save review" });
     }
 });
+
+
 
 // Get reviews request for a single movie
 // router.get("/review", async (req, res) => {

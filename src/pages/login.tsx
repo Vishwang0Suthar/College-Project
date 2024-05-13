@@ -51,6 +51,11 @@ const Login = ({ setLoginUser }) => {
     // Perform login logic
     await Authlogin();
   };
+
+  const navigateToRegister = () => {
+    router.push("/register");
+  };
+
   return (
     <div className="vh-100 z-30">
       <div className="container-fluid h-custom">
@@ -140,12 +145,10 @@ const Login = ({ setLoginUser }) => {
                 <p className="small fw-bold mt-2 pt-1 mb-0">
                   Don't have an account?{" "}
                   <button
-                    type="submit"
                     style={{ padding: "0rem 2rem" }}
                     className="btn btn-primary btn-lg"
-                    onClick={() => {
-                      router.push("/register");
-                    }}
+                    onClick={navigateToRegister}
+                    type="button" // Change type to button
                   >
                     Register
                   </button>

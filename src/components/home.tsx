@@ -65,7 +65,7 @@ export default function Home() {
     <>
       <div>
         <div className="">
-          <Spotlight className="absolute left-1/4 -top-1/3" />
+          {/* <Spotlight className="absolute left-1/4 -top-1/3" /> */}
         </div>
         <p className="text-9xl pt-20 text-[#FBFADA] text-center font-mono font-semibold">
           <Link href="/">SCREEN DIARY</Link>
@@ -83,7 +83,7 @@ export default function Home() {
         </div>
       </div>
       {/* <Movieslides /> */}
-      <div className="py-10 z-0 px-16 mt-20 flex w-[30%] mx-auto gap-2 justify-center relative">
+      <div className="py-10 z-0 px-16 p-8 mt-20 flex w-[30%] mx-auto gap-2 justify-center relative">
         <input
           type="text"
           className="relative p-2 w-96 rounded-sm focus:ring-green-700 focus:outline-none ring-2"
@@ -105,7 +105,7 @@ export default function Home() {
 
       {data ? (
         <div
-          className="grid px-16 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 "
+          className="grid px-16 p-8 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 "
           onLoad={handleImageLoad}
         >
           {data.Search &&
