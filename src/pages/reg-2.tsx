@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { emit } from "process";
 import React, { useEffect, useRef, useState } from "react";
 import { FaCheck, FaInfoCircle, FaTimes } from "react-icons/fa";
 
@@ -22,12 +23,17 @@ const RegUser = (props: Props) => {
     password: "",
     reEnterPassword: "",
   });
+  const [pwd, setPwd] = useState("");
+  const [matchPwd, setMatchPwd] = useState();
   const [validName, setValidName] = useState(false);
   const [validMail, setValidMail] = useState(false);
   const [validPwd, setValidPwd] = useState(false);
   const [validMatch, setValidMatch] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  const [userFocus, setUserFocus] = useState(false);
+  const [mailFocus, setMailFocus] = useState(false);
+  const [pwdFocus, setPwdFocus] = useState(false);
 
   const router = useRouter();
 
@@ -55,6 +61,10 @@ const RegUser = (props: Props) => {
     setValidMatch(match);
   }, [user.password, user.reEnterPassword]);
 
+  useEffect(() => {
+    setErrMsg("");
+  }, [user, pwdRef, matchPwdRef]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -74,13 +84,27 @@ const RegUser = (props: Props) => {
           headers: { "Content-Type": "application/json" },
         });
         const data1 = await res.json();
-        alert(data1.message);
+        // alert(data1.message);
         if (data1.success) router.push("/", { name: data1.user.name });
+        else {
+          // Error handling
+          if (res.status === 400) {
+            setErrMsg("Username Taken");
+          } else if (res.status === 409) {
+            setErrMsg("User already registered");
+          } else if (res.status === 500) {
+            setErrMsg("Internal Server Error");
+          } else if (res.status === 201) {
+            setErrMsg("User Registered successfully");
+            setSuccess(true);
+          }
+        }
       } catch (error) {
         console.error("Error:", error);
+        setErrMsg("Network Error");
       }
     } else {
-      alert("Invalid input");
+      setErrMsg("Invalid input");
     }
   };
 
@@ -91,12 +115,17 @@ const RegUser = (props: Props) => {
         className="img-fluid absolute -top-40 z-10"
         alt="Sample"
       />
-      <section className="text-black z-20 bg-white bg-opacity-70 p-8 rounded-xl mt-32 max-w-[400px]  flex flex-col justify-center">
+      <section className="text-black z-20 bg-white bg-opacity-70 p-8 rounded-xl mt-28 max-w-[400px]  flex flex-col justify-center">
         <p
           ref={errRef}
-          className={errMsg ? "errmsg" : "offscreen"}
+          className={
+            errMsg
+              ? "text-red-600 flex gap-2 items-center bg-red-200 p-3 border-2 border-red-600 rounded-md"
+              : "hidden"
+          }
           aria-live="assertive"
         >
+          <FaInfoCircle />
           {errMsg}
         </p>
         <h1 className="text-center font-semibold text-xl">Register</h1>
@@ -104,13 +133,26 @@ const RegUser = (props: Props) => {
           className="flex flex-col w-80 gap-2 self-center p-4"
           onSubmit={register}
         >
-          <label htmlFor="username" className="flex items-center gap-2">
+          <label
+            htmlFor="username"
+            className="justify-between flex items-center gap-2"
+          >
             Username:
-            {validName ? (
+            {/* {validName ? (
               <FaCheck className="flex text-green-600 mt-1" />
             ) : (
               <FaTimes className="flex text-red-600 mt-1" />
-            )}
+            )} */}
+            <span className={validName ? "flex" : "hidden"}>
+              <FaCheck className="flex text-green-600 mt-1" />
+            </span>
+            <span
+              className={
+                (!validName || !user.name) && userFocus ? "flex" : "hidden"
+              }
+            >
+              <FaTimes className="flex text-red-600 mt-1" />
+            </span>
           </label>
           <input
             type="text"
@@ -123,12 +165,14 @@ const RegUser = (props: Props) => {
             araia-invalid={validName ? "false" : "true"}
             className="text-black w-full px-1 rounded-sm appearance-none"
             aria-describedby="uidnote"
+            onFocus={() => setUserFocus(true)}
+            onBlur={() => setUserFocus(false)}
           />
           <p
             id="uidnote"
             ref={errRef}
             className={
-              user.name && !validName
+              user.name && !validName && userFocus
                 ? "block bg-beige-100 border-beigeDark-150 max-w-72 rounded-md text-black border-2 p-2"
                 : "hidden"
             }
@@ -140,13 +184,26 @@ const RegUser = (props: Props) => {
             Letters, numbers, underscores, hyphens allowed.
           </p>
 
-          <label htmlFor="email" className="flex items-center gap-2">
+          <label
+            htmlFor="email"
+            className="justify-between flex items-center gap-2"
+          >
             E-mail:
-            {validMail ? (
+            {/* {validMail ? (
               <FaCheck className="flex text-green-600 mt-1" />
             ) : (
               <FaTimes className="flex text-red-600 mt-1" />
-            )}
+            )} */}
+            <span className={validMail ? "flex" : "hidden"}>
+              <FaCheck className="flex text-green-600 mt-1" />
+            </span>
+            <span
+              className={
+                (!validMail || !user.email) && mailFocus ? "flex" : "hidden"
+              }
+            >
+              <FaTimes className="flex text-red-600 mt-1" />
+            </span>
           </label>
           <input
             type="email"
@@ -159,12 +216,14 @@ const RegUser = (props: Props) => {
             araia-invalid={validMail ? "false" : "true"}
             className="text-black w-full px-1 rounded-sm appearance-none"
             aria-describedby="emailnote"
+            onFocus={() => setMailFocus(true)}
+            onBlur={() => setMailFocus(false)}
           />
           <p
             id="emailnote"
             ref={errRef}
             className={
-              user.email && !validMail
+              user.email && !validMail && mailFocus
                 ? "block bg-beige-100 border-beigeDark-150 max-w-72 rounded-md text-black border-2 p-2"
                 : "hidden"
             }
@@ -174,13 +233,26 @@ const RegUser = (props: Props) => {
             email address.
           </p>
 
-          <label htmlFor="password" className="flex items-center gap-2">
+          <label
+            htmlFor="password"
+            className="justify-between flex items-center gap-2"
+          >
             Password:
-            {validPwd ? (
+            {/* {validPwd ? (
               <FaCheck className="flex text-green-600 mt-1" />
             ) : (
               <FaTimes className="flex text-red-600 mt-1" />
-            )}
+            )} */}
+            <span className={validPwd ? "flex" : "hidden"}>
+              <FaCheck className="flex text-green-600 mt-1" />
+            </span>
+            <span
+              className={
+                (!validPwd || !user.password) && pwdFocus ? "flex" : "hidden"
+              }
+            >
+              <FaTimes className="flex text-red-600 mt-1" />
+            </span>
           </label>
           <input
             type="password"
@@ -193,6 +265,8 @@ const RegUser = (props: Props) => {
             araia-invalid={validPwd ? "false" : "true"}
             className="text-black w-full px-1 rounded-sm appearance-none"
             aria-describedby="pwdnote"
+            onFocus={() => setPwdFocus(true)}
+            onBlur={() => setPwdFocus(false)}
           />
           <p
             id="pwdnote"
@@ -210,13 +284,26 @@ const RegUser = (props: Props) => {
             one number, and one special character.
           </p>
 
-          <label htmlFor="confirm_pwd" className="flex items-center gap-2">
+          <label
+            htmlFor="confirm_pwd"
+            className="justify-between flex items-center gap-2"
+          >
             Confirm Password:
-            {validMatch && user.reEnterPassword ? (
+            {/* {validMatch && user.reEnterPassword ? (
               <FaCheck className="flex text-green-600 mt-1" />
             ) : (
               <FaTimes className="flex text-red-600 mt-1" />
-            )}
+            )} */}
+            <span
+              className={validMatch && user.reEnterPassword ? "flex" : "hidden"}
+            >
+              <FaCheck className="flex text-green-600 mt-1" />
+            </span>
+            <span
+              className={(!validMatch || !user) && pwdFocus ? "flex" : "hidden"}
+            >
+              <FaTimes className="flex text-red-600 mt-1" />
+            </span>
           </label>
           <input
             type="password"
@@ -247,7 +334,11 @@ const RegUser = (props: Props) => {
           <div className="text-center flex justify-evenly text-lg-start mt-4 pt-2">
             <button
               type="submit"
-              className="btn btn-primary btn-lg p-2 bg-greenDark-50 rounded-md text-white"
+              className={
+                !validName || !validMail || !validPwd || !validMatch
+                  ? "btn btn-primary btn-lg p-2 bg-greenDark-50 bg-opacity-80 hover:cursor-not-allowed rounded-md text-white"
+                  : "btn btn-primary btn-lg p-2 bg-greenDark-50 rounded-md text-white"
+              }
               disabled={!validName || !validMail || !validPwd || !validMatch}
             >
               Register

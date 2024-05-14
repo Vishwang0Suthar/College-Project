@@ -35,21 +35,28 @@ router.post("/", async (req, res) => {
 
 // User register request
 router.post("/register", async (req, res) => {
-    const { name, email, password } = req.body;
+
+    let { name, email, password } = req.body;
+    email = email.toLowerCase();
+    name = name.toLowerCase();
 
     try {
+        let username = await User.findOne({ name });
         let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ message: "User already registered" });
+        if (username) {
+            return res.status(400).json({ status: 400 });
+        }
+        else if (user) {
+            return res.status(409).json({ status: 409 });
         } else {
             const hashedPassword = await bcrypt.hash(password, 10);
             user = new User({ name, email, password: hashedPassword });
             await user.save();
-            return res.json({ message: "User registered successfully" });
+            return res.status(201).json({ status: 201 });
         }
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ status: 500 });
     }
 });
 
