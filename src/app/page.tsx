@@ -4,7 +4,6 @@ import Home from "../components/home";
 import { useRouter } from "next/navigation";
 import { isUserLoggedIn } from "../context/Auth";
 import { AuthProvider } from "@/context/AuthContext";
-
 const Page = () => {
   const router = useRouter();
 
@@ -18,7 +17,11 @@ const Page = () => {
 
   return (
     <>
-      <Home />
+      <React.StrictMode>
+        <AuthProvider>
+          <Home />
+        </AuthProvider>
+      </React.StrictMode>
     </>
   );
 };

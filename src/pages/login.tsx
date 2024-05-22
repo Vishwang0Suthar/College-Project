@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Authlogin } from "../context/Auth";
 
@@ -8,15 +8,22 @@ import { Authlogin } from "../context/Auth";
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { SparklesCore } from "@/components/paricles";
-
+import { AuthContext } from "@/context/AuthContext";
+import axios from "@/api/axios";
+import clsx from "clsx";
+const LOGIN_URL = "/auth";
 const Login = ({ setLoginUser }) => {
   //   const Navigate = useNavigate();
   const router = useRouter();
-
+  const { setAuth } = useContext;
+  AuthContext;
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+
+  const [pwdFocus, setPwdFocus] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
 
   const handleChange = (event: FormEvent) => {
     const { name, value } = event.target;
@@ -39,7 +46,7 @@ const Login = ({ setLoginUser }) => {
     alert(data1.message);
     if (data1.success) {
       console.log("logged in");
-
+      setAuth({ user });
       router.push("/", { state: { name: data1.user.name } });
       localStorage.setItem("username", data1.user.email);
       // console.log(localStorage.getItem("username"));
@@ -85,24 +92,48 @@ const Login = ({ setLoginUser }) => {
             >
               {/* {console.log("User", user)} */}
 
-              <div className="form-outline mb-4">
+              <div className="form-outline  mb-4">
+                <label
+                  className={clsx(
+                    "justify-between duration-100  flex items-center gap-2",
+                    {
+                      "font-bold": emailFocus,
+                    }
+                  )}
+                >
+                  E-mail:
+                </label>
                 <input
-                  className="form-control form-control-lg rounded-lg px-2 text-lg w-full"
+                  className="form-control form-control-lg rounded-sm px-2 text-lg w-full"
                   type="text"
                   name="email"
                   value={user.email}
                   onChange={handleChange}
                   placeholder="Enter your Email"
+                  onFocus={() => setEmailFocus(true)}
+                  onBlur={() => setEmailFocus(false)}
                 ></input>
               </div>
               <div className="form-outline mb-4">
+                <label
+                  className={clsx(
+                    "justify-between duration-100  flex items-center gap-2",
+                    {
+                      "font-bold": pwdFocus,
+                    }
+                  )}
+                >
+                  Password:
+                </label>
                 <input
-                  className="form-control form-control-lg rounded-lg px-2 text-lg w-full"
+                  className="form-control form-control-lg rounded-sm px-2 text-lg w-full"
                   type="password"
                   name="password"
                   value={user.password}
                   onChange={handleChange}
                   placeholder="Enter your Password"
+                  onFocus={() => setPwdFocus(true)}
+                  onBlur={() => setPwdFocus(false)}
                 ></input>
               </div>
 

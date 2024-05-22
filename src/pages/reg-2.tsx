@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { emit } from "process";
@@ -23,6 +24,7 @@ const RegUser = (props: Props) => {
     password: "",
     reEnterPassword: "",
   });
+
   const [pwd, setPwd] = useState("");
   const [matchPwd, setMatchPwd] = useState();
   const [validName, setValidName] = useState(false);
@@ -34,6 +36,7 @@ const RegUser = (props: Props) => {
   const [userFocus, setUserFocus] = useState(false);
   const [mailFocus, setMailFocus] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
+  const [pwdMatchFocus, setPwdMatchFocus] = useState(false);
 
   const router = useRouter();
 
@@ -135,7 +138,12 @@ const RegUser = (props: Props) => {
         >
           <label
             htmlFor="username"
-            className="justify-between flex items-center gap-2"
+            className={clsx(
+              "justify-between duration-100  flex items-center gap-2",
+              {
+                "font-bold": userFocus,
+              }
+            )}
           >
             Username:
             {/* {validName ? (
@@ -186,7 +194,12 @@ const RegUser = (props: Props) => {
 
           <label
             htmlFor="email"
-            className="justify-between flex items-center gap-2"
+            className={clsx(
+              "justify-between duration-100  flex items-center gap-2",
+              {
+                "font-bold": mailFocus,
+              }
+            )}
           >
             E-mail:
             {/* {validMail ? (
@@ -235,7 +248,12 @@ const RegUser = (props: Props) => {
 
           <label
             htmlFor="password"
-            className="justify-between flex items-center gap-2"
+            className={clsx(
+              "justify-between duration-100  flex items-center gap-2",
+              {
+                "font-bold": pwdFocus,
+              }
+            )}
           >
             Password:
             {/* {validPwd ? (
@@ -286,7 +304,12 @@ const RegUser = (props: Props) => {
 
           <label
             htmlFor="confirm_pwd"
-            className="justify-between flex items-center gap-2"
+            className={clsx(
+              "justify-between duration-100  flex items-center gap-2",
+              {
+                "font-bold": pwdMatchFocus,
+              }
+            )}
           >
             Confirm Password:
             {/* {validMatch && user.reEnterPassword ? (
@@ -316,6 +339,8 @@ const RegUser = (props: Props) => {
             araia-invalid={validMatch ? "false" : "true"}
             className="text-black w-full px-1 rounded-sm appearance-none"
             aria-describedby="matchpwdnote"
+            onFocus={() => setPwdMatchFocus(true)}
+            onBlur={() => setPwdMatchFocus(false)}
           />
           <p
             id="matchpwdnote"
