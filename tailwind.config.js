@@ -19,6 +19,9 @@ module.exports = {
         },
         greenDark: {
           50: "#12372a"
+        },
+        beigeDark: {
+          150: "#AA9261"
         }
 
       },

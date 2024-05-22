@@ -14,13 +14,13 @@ export const ParallaxScroll = ({
 }) => {
   const gridRef = useRef<any>(null);
   const { scrollYProgress } = useScroll({
-    container: gridRef, // remove this if your container is not fixed height
+    // remove this if your container is not fixed height
     offset: ["start start", "end start"], // remove this if your container is not fixed height
   });
 
-  const translateFirst = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const translateSecond = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const translateThird = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const translateFirst = useTransform(scrollYProgress, [0, 1], [0, -250]);
+  const translateSecond = useTransform(scrollYProgress, [0, 1], [0, 250]);
+  const translateThird = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
   const third = Math.ceil(images.length / 3);
 
@@ -29,10 +29,7 @@ export const ParallaxScroll = ({
   const thirdPart = images.slice(2 * third);
 
   return (
-    <div
-      className={cn("h-screen items-start overflow-y-auto w-full", className)}
-      ref={gridRef}
-    >
+    <div className={cn("items-start w-full", className)} ref={gridRef}>
       <p className="w-full flex text-white text-5xl font-semibold items-center justify-center pt-10">
         Editor's Picks
       </p>
