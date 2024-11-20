@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { emit } from "process";
 import React, { useEffect, useRef, useState } from "react";
-import { FaCheck, FaInfoCircle, FaTimes } from "react-icons/fa";
+import { FaCheck, FaCheckCircle, FaInfoCircle, FaTimes } from "react-icons/fa";
 
 const PWD_REGEX =
   /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{8,32}$/;
@@ -17,6 +17,7 @@ const RegUser = (props: Props) => {
   const pwdRef = useRef();
   const matchPwdRef = useRef();
   const errRef = useRef();
+  const sucRef = useRef();
 
   const [user, setUser] = useState({
     name: "",
@@ -32,6 +33,8 @@ const RegUser = (props: Props) => {
   const [validPwd, setValidPwd] = useState(false);
   const [validMatch, setValidMatch] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [sucMsg, setSucMsg] = useState("");
+
   const [success, setSuccess] = useState(false);
   const [userFocus, setUserFocus] = useState(false);
   const [mailFocus, setMailFocus] = useState(false);
@@ -98,7 +101,7 @@ const RegUser = (props: Props) => {
           } else if (res.status === 500) {
             setErrMsg("Internal Server Error");
           } else if (res.status === 201) {
-            setErrMsg("User Registered successfully");
+            setSucMsg("User Registered successfully");
             setSuccess(true);
           }
         }
@@ -130,6 +133,18 @@ const RegUser = (props: Props) => {
         >
           <FaInfoCircle />
           {errMsg}
+        </p>
+        <p
+          ref={sucRef}
+          className={
+            sucMsg
+              ? "text-red-600 flex gap-2 items-center bg-red-200 p-3 border-2 border-red-600 rounded-md"
+              : "hidden"
+          }
+          aria-live="assertive"
+        >
+          <FaCheckCircle />
+          {sucMsg}
         </p>
         <h1 className="text-center font-semibold text-xl">Register</h1>
         <form

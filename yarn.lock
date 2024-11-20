@@ -754,6 +754,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-stars@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.npmjs.org/@types/react-stars/-/react-stars-2.2.4.tgz"
+  integrity sha512-7wZNmH28ZeDSkesOmpvenLOLJ3StRdHzAbbs+ZkLEOx75Qe8vUWl+qCGnJHdKr+HCF/BSZPvw7LF96Fl+fTUSw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.10":
   version "4.4.10"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.10.tgz"

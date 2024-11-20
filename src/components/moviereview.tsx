@@ -63,7 +63,7 @@ const MovieReviews = ({ receivedData, data }: Props) => {
   };
 
   return (
-    <div className="text-white p-4 flex flex-col gap-4 w-full lg:w-[50%]">
+    <div className="text-white p-4 flex flex-col gap-4 w-full ">
       {data.Title && reviews && (
         <>
           <h2 className="text-xl">Reviews for {data.Title}</h2>
@@ -99,7 +99,7 @@ const MovieReviews = ({ receivedData, data }: Props) => {
                         edit={false}
                         size={20}
                         className=""
-                        color2={"#FBFADA"}
+                        color2="#89fa9a"
                         value={review.rating}
                       />
                     </div>

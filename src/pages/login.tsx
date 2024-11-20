@@ -46,7 +46,7 @@ const Login = ({ setLoginUser }) => {
     alert(data1.message);
     if (data1.success) {
       console.log("logged in");
-      setAuth({ user });
+      // setAuth({ user });
       router.push("/", { state: { name: data1.user.name } });
       localStorage.setItem("username", data1.user.email);
       // console.log(localStorage.getItem("username"));

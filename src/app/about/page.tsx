@@ -59,7 +59,7 @@ const About = (props: Props) => {
         <div className="flex justify-center py-3 text-[antiquewhite]">
           <p className="text-4xl font-bold">Team Details</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 px-5 pb-5 ">
+        <div className="grid grid-cols-1 sm:grid-cols-1 place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 px-5 pb-5 ">
           {aboutUsData.TeamCardData.map((item, index) => {
             return (
               <div key={index}>

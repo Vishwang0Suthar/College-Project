@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
                 } else {
                     return res.status(401).json({ success: false, message: "Incorrect Password" });
                 }
-            } else {
+                // } else {
                 return res.status(404).json({ success: false, message: "User not found" });
             }
         } catch (err) {
