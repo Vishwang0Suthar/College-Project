@@ -1,29 +1,37 @@
 import React, { FormEvent, useState } from "react";
 import Stars from "./stars/star";
-import { Checkbox } from "@mui/material";
-import { useRouter } from "next/navigation";
+import swal from "sweetalert";
 
-const Review = () => {
-  const router = useRouter();
+type Props = {
+  movie?: string;
+  receivedData?: string;
+};
+
+const Review = ({ movie, receivedData, ...props }: Props) => {
   const user = localStorage.getItem("username");
-  const [rating, setRating] = useState(0);
 
-  // Function to handle rating change
-  const handleRatingChange = (newRating) => {
-    setRating(newRating);
-  };
-
+  // State for review data
   const [reviewData, setReviewData] = useState({
     user: user,
+    movie: movie,
+    movieAPI: receivedData,
     text: "",
     rating: 0,
     spoiler: false,
   });
 
+  // Function to handle rating change
+  const handleRatingChange = (newRating) => {
+    setReviewData({
+      ...reviewData,
+      rating: newRating,
+    });
+  };
+
+  // Function to handle form inputs change
   const handleChange = (event: FormEvent) => {
     const { name, value, checked, type } = event.target;
 
-    // Handle checkbox differently
     if (type === "checkbox") {
       setReviewData({
         ...reviewData,
@@ -37,18 +45,32 @@ const Review = () => {
     }
   };
 
+  // Function to submit review
   const review = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(reviewData);
-    const res = await fetch("http://localhost:5000/review", {
-      method: "POST",
-      body: JSON.stringify(reviewData),
-      headers: { "Content-Type": "application/json" },
-    });
-    const data1 = await res.json();
-    alert(data1.message);
-    if (data1.success) {
-      alert("Review submitted successfully");
+
+    try {
+      const res = await fetch("http://localhost:5000/review", {
+        method: "POST",
+        body: JSON.stringify(reviewData),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data1 = await res.json();
+
+      if (data1.success) {
+        swal("Great!", "Review saved successfully!", "success");
+      } else if (data1.alreadyReviewed) {
+        swal("Oops!", "You already posted a review for this movie.", "info");
+      } else {
+        swal(
+          "Oops!",
+          "Failed to save review. Please try again later.",
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      swal("Oops!", "Something went wrong. Please try again later.", "error");
     }
   };
 
@@ -61,17 +83,17 @@ const Review = () => {
             <textarea
               name="text"
               className="w-full focus:outline-none shadow-xl p-2 rounded-md"
-              placeholder="Write your own Review"
+              placeholder="🖋 Write your own Review"
               value={reviewData.text}
+              rows={5}
               onChange={handleChange}
             ></textarea>
           </div>
-          <div className="flex-1 flex flex-col w-full ">
+          <div className="flex-1 flex flex-col gap-2 w-full ">
             <Stars
-              name="rating"
-              rating={rating}
+              rating={reviewData.rating}
               onRatingChange={handleRatingChange}
-            />{" "}
+            />
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -82,10 +104,13 @@ const Review = () => {
                 className="form-checkbox border-greenDark-50 h-5 w-5 text-beige-100"
               />
               <label htmlFor="checkbox" className="ml-2 text-white">
-                Remember me
+                Contains Spoiler?
               </label>
             </div>
-            <button type="submit" className="p-2 bg-black text-white">
+            <button
+              type="submit"
+              className="p-2 rounded-md hover:bg-white hover:text-black duration-500 bg-black text-white"
+            >
               Submit
             </button>
           </div>
@@ -96,4 +121,3 @@ const Review = () => {
 };
 
 export default Review;
-  

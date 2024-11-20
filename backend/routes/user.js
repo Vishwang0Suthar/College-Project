@@ -1,82 +1,133 @@
-const model = require("../mongo/user");
-const User = model.User;
 const express = require("express");
-const Router = require("router");
-const { mongo } = require("mongoose");
-const router = Router();
-
 const bcrypt = require("bcrypt");
+const { User } = require("../mongo/user"); // Import User model
+const router = express.Router(); // Use express.Router()
+const mongo = require("mongoose");
+const swal = require("sweetalert");
+// Middleware to parse JSON bodies
+router.use(express.json());
 
-
-
-let newuser = {}
-let user;
 // User login request
-router.post("/login", async (req, res) => {
-    let success = false;
+router.post("/", async (req, res) => {
     const { email, password } = req.body;
-    user = await User.findOne({ email: email });
-    console.log(user)
-    // console.log(email)
-    // console.log(password)
-
-    // if (!email || !password) {
-    //     success = false;
-    //     res.send({ message: "Please enter valid data" });
-    // } else {
-    if (user) {
-        newuser.email = email;
-        const hashPassword = await bcrypt.compare(password, user.password);
-        if (hashPassword) {
-            res.send({ message: "Login Successfull", user: user, success: true });
-        } else {
-            success = false;
-            res.send({
-                message: "Password didn't match",
-            });
-            // res.sendStatus(401);
+    if (email == "")
+        return res.status(500).json({ success: false, message: "Invalid input for user name" });
+    else {
+        try {
+            const user = await User.findOne({ email });
+            if (user) {
+                const match = await bcrypt.compare(password, user.password);
+                if (match) {
+                    return res.json({ success: true, message: "Login Successful", user });
+                } else {
+                    return res.status(401).json({ success: false, message: "Incorrect Password" });
+                }
+                // } else {
+                return res.status(404).json({ success: false, message: "User not found" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
         }
-    } else {
-        success = false;
-        res.send({ message: "User not registered" });
     }
-    // }
 });
+
+
 // User register request
 router.post("/register", async (req, res) => {
-    const { name, email, password } = req.body;
-    let success = false;
+
+    let { name, email, password } = req.body;
+    email = email.toLowerCase();
+    name = name.toLowerCase();
+
     try {
-        // console.log("bruh");
-        let user = await User.findOne({ email: email });
-        if (user) {
-            success = false;
-            res.send({
-                message: "User already registerd",
-                user: user,
-                success: success,
-            });
+        let username = await User.findOne({ name });
+        let user = await User.findOne({ email });
+        if (username) {
+            return res.status(400).json({ status: 400 });
+        }
+        else if (user) {
+            return res.status(409).json({ status: 409 });
         } else {
-            const user = new User({
-                name,
-                email,
-                password,
-            });
-            const hashPassword = await bcrypt.hash(password, 10);
-            user.password = hashPassword;
-            const doc = await user.save();
-            console.log(doc);
-            success = true;
-            res.json({
-                message: "User registered Successfull, Please Login now...",
-                success: success,
-            });
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user = new User({ name, email, password: hashedPassword });
+            await user.save();
+            return res.status(201).json({ status: 201 });
         }
     } catch (err) {
-        success = false;
-        res.send(err);
+        console.error(err);
+        return res.status(500).json({ status: 500 });
     }
 });
 
+// Review submission request
+// Review submission request
+router.post("/review", async (req, res) => {
+    const { movie, user, movieAPI, text, rating, spoiler } = req.body;
+
+    if (!user || !text || rating === undefined) {
+        return res.status(400).json({ success: false, message: "Please provide all required fields" });
+    }
+
+    try {
+        const Review = mongo.connection.collection("Review"); // Assuming MongoDB connection
+
+        // Check if the user already posted a review
+        const existingReview = await Review.findOne({ movie, user });
+        if (existingReview) {
+            return res.status(400).json({ success: false, alreadyReviewed: true });
+        }
+
+        const review = { movie, user, movieAPI, text, rating, spoiler };
+        await Review.insertOne(review);
+        return res.json({ success: true, message: "Review saved successfully", review });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "Failed to save review" });
+    }
+});
+
+
+
+// Get reviews request for a single movie
+// router.get("/review", async (req, res) => {
+//     const movieAPI = req.query.movie;
+//     if (!movieAPI) {
+//         return res.status(400).json({ message: "No reviewsavailable" });
+//     }
+
+//     try {
+//         const Review = mongo.connection.collection("Review");
+//         const reviews = await Review.find({ movieAPI }).toArray();
+//         return res.json(reviews);
+//     } catch (err) {
+//         console.error(err);
+//         return res.status(500).json({ message: "Failed to fetch reviews" });
+//     }
+// });
+
+router.get("/review", async (req, res) => {
+    try {
+        const { movieAPI, username } = req.query;
+
+
+        if (!movieAPI || !username) {
+            return res.status(400).send("Movie API and username are required");
+        }
+        const Review = mongo.connection.collection("Review");
+
+        // Define the filter based on provided parameters
+        const filter = {};
+        if (movieAPI) filter.movieAPI = movieAPI;
+        // if (username) filter.user = username;
+
+        const reviews = await Review.find(filter).toArray();
+        return res.json(reviews);
+
+    } catch (err) {
+        console.error("Error fetching:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 exports.router = router;
